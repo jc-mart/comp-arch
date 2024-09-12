@@ -5,7 +5,7 @@ module mux_2to1_test();
 	reg tA, tB, tS0;
 	wire tZ;
 
-	// 2:1 multtiplexor testing
+	// 2:1 multiplexor testing
 	mux_2to1 mux (.A(tA), .B(tB), .S0(tS0), .Z(tZ));
 
 	initial begin
