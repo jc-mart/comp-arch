@@ -2,3 +2,8 @@
 !*.v
 !*.png
 !*/
+!*.qpf
+!*.qsf
+!*.sdc
+
+comp-arch.*
