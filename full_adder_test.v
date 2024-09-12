@@ -44,6 +44,9 @@ module full_adder_test();
 		tB    = 1'b1;
 		tC_in = 1'b1;
 
+		#5;
+
+		$finish;
 	end
 
 endmodule
