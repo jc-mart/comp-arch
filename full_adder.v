@@ -1,3 +1,5 @@
+`timescale 1us/100ns
+
 module full_adder(A, B, C_in, S, C_out);
 	// I/O
    	input wire A, B, C_in;
@@ -13,4 +15,4 @@ module full_adder(A, B, C_in, S, C_out);
 	assign S = AxB ^ C_in;
 	assign C_out = AxBaC_in | AaB;
 
-endmodule;
+endmodule
