@@ -3,10 +3,9 @@
 module finite_state_machine(clock, reset);
 	// Inputs
 	input wire clock, reset;
-	
+
 	// Intermediates
-	wire [3:0] count;
-	wire [3:0] next;
+	wire [3:0] count, next;
 
 	// Logic
 	dflop f0(.q(count[0]), .d(next[0]), .clk(clock), .rst(reset));
