@@ -1,10 +1,10 @@
 `timescale 1us/100ns
 
-module alu(in0, in1, selector, zero, out);
+module alu(in0, in1, selector, zero, out0);
 	// I/O
 	input wire [31:0] in0, in1;
 	input wire [9:0] selector;
-	output reg [31:0] out; // Using case statements
+	output reg [31:0] out0; // Using case statements
 	output wire zero;
 
 	// Intermediates
@@ -24,31 +24,33 @@ module alu(in0, in1, selector, zero, out);
 	always @(*) begin
 		if (selector[2:0] == 3'b000) begin // Add or subtract
 			case (selector[9:3])
-				7'b0000000: out = add0;
-				7'b0100000: out = sub0;
-				default: out = in0;
+				7'b0000000: out0 = add0;
+				7'b0100000: out0 = sub0;
+				default: out0 = in0;
 			endcase
 		end 
 
 		else if (selector[2:0] == 3'b101) begin // SLR or SAR 
 			case (selector[3:0])
-				7'b0000000: out = slr0;
-				7'b0100000: out = sar0;
-				default: out = in0;
+				7'b0000000: out0 = slr0;
+				7'b0100000: out0 = sar0;
+				default: out0 = in0;
 
 			endcase
 		end
 
 		else begin // Bitwise operations
 			case (selector[2:0])
-				3'b001: out = sll0;
-				3'b100: out = xor0;
-				3'b110: out = or0;
-				3'b111: out = and0;
-				default: out = in0;
+				3'b001: out0 = sll0;
+				3'b100: out0 = xor0;
+				3'b110: out0 = or0;
+				3'b111: out0 = and0;
+				default: out0 = in0;
 
 			endcase
 		end
 	end
 	
+	// Zero flag using NOR gate
+	assign zero = ~(|out0);
 endmodule
