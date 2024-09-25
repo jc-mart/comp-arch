@@ -12,43 +12,44 @@ module mux_32to1(I0, I1, I2, I3, I4, I5, I6, I7,
 			  I22, I23, I24, I25, I26, I27, I28,
 			  I29, I30, I31;
 	input wire [4:0] S;
-	output wire [31:0] O;
+	output reg [31:0] O; // Using register only for switch cases
 
-	// Using register only for switch cases
-	reg [31:0] O;
-	case(S)
-		5'b00000: O = I0;
-		5'b00001: O = I1;
-		5'b00010: O = I2;
-		5'b00011: O = I3;
-		5'b00100: O = I4;
-		5'b00101: O = I5;
-		5'b00110: O = I6;
-		5'b00111: O = I7;
-		5'b01000: O = I8;
-		5'b01001: O = I9;
-		5'b01010: O = I10;
-		5'b01011: O = I11;
-		5'b01100: O = I12;
-		5'b01101: O = I13;
-		5'b01110: O = I14;
-		5'b01111: O = I15;
-		5'b10000: O = I16;
-		5'b10001: O = I17;
-		5'b10010: O = I18;
-		5'b10011: O = I19;
-		5'b10100: O = I20;
-		5'b10101: O = I21;
-		5'b10110: O = I22;
-		5'b10111: O = I23;
-		5'b11000: O = I24;
-		5'b11001: O = I25;
-		5'b11010: O = I26;
-		5'b11011: O = I27;
-		5'b11100: O = I28;
-		5'b11101: O = I29;
-		5'b11110: O = I30;
-		5'b11111: O = I31;
-		
-	endcase
+	// Mux logic
+	always @(*) begin
+		case(S)
+			5'd0: O = I0;
+            		5'd1:   O = I1;
+            		5'd2:   O = I2;
+            		5'd3:   O = I3;
+            		5'd4:   O = I4;
+            		5'd5:   O = I5;
+            		5'd6:   O = I6;
+            		5'd7:   O = I7;
+            		5'd8:   O = I8;
+            		5'd9:   O = I9;
+            		5'd10:  O = I10;
+            		5'd11:  O = I11;
+            		5'd12:  O = I12;
+            		5'd13:  O = I13;
+            		5'd14:  O = I14;
+            		5'd15:  O = I15;
+            		5'd16:  O = I16;
+            		5'd17:  O = I17;
+            		5'd18:  O = I18;
+            		5'd19:  O = I19;
+            		5'd20:  O = I20;
+            		5'd21:  O = I21;
+            		5'd22:  O = I22;
+            		5'd23:  O = I23;
+            		5'd24:  O = I24;
+            		5'd25:  O = I25;
+            		5'd26:  O = I26;
+            		5'd27:  O = I27;
+            		5'd28:  O = I28;
+            		5'd29:  O = I29;
+            		5'd30:  O = I30;
+            		5'd31:  O = I31;
+			default: O = I0;
+		endcase
+	end
 endmodule
