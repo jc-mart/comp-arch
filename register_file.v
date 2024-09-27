@@ -8,7 +8,7 @@ module register_file(ra0, ra1, we, wd, wa, out0, out1, clock, reset);
 	output wire [31:0] out0, out1;
 
 	// Intermediates
-	wire we_router0, we_router1, we_router2, we_router3, // write data router from 1:32 mux
+	wire we_router0, we_router1, we_router2, we_router3, // write enable router from 1:32 mux
 	     we_router4, we_router5, we_router6, we_router7,
 	     we_router8, we_router9, we_router10, we_router11,
 	     we_router12, we_router13, we_router14, we_router15,
@@ -40,15 +40,15 @@ module register_file(ra0, ra1, we, wd, wa, out0, out1, clock, reset);
 			    .I30(data30), .I31(data31), .S(ra1), .O(out1));
 	mux_1to32 write_enable(.in0(we), .sel0(wa), .out0(we_router0), .out1(we_router1),
 			       .out2(we_router2), .out3(we_router3), .out4(we_router4),
-			       .out5(we_router5), .out6(we_router7), .out8(we_router8),
-			       .out9(we_router9), .out10(we_router10), .out11(we_router11),
-			       .out12(we_router12), .out13(we_router13), .out14(we_router14),
-			       .out15(we_router15), .out16(we_router16), .out17(we_router17),
-  			       .out18(we_router18), .out19(we_router19), .out20(we_router20),
- 			       .out21(we_router21), .out22(we_router22), .out23(we_router23),
-			       .out24(we_router24), .out25(we_router25), .out26(we_router26),
-			       .out27(we_router27), .out28(we_router28), .out29(we_router29),
-			       .out30(we_router30), .out31(we_router31));
+			       .out5(we_router5), .out6(we_router6), .out7(we_router7), 
+			       .out8(we_router8), .out9(we_router9), .out10(we_router10), 
+			       .out11(we_router11), .out12(we_router12), .out13(we_router13), 
+			       .out14(we_router14), .out15(we_router15), .out16(we_router16), 
+			       .out17(we_router17), .out18(we_router18), .out19(we_router19), 
+			       .out20(we_router20), .out21(we_router21), .out22(we_router22), 
+			       .out23(we_router23), .out24(we_router24), .out25(we_router25), 
+			       .out26(we_router26), .out27(we_router27), .out28(we_router28), 
+			       .out29(we_router29), .out30(we_router30), .out31(we_router31));
 	register r0(.in0(wd), .out0(data0), .sel0(we_router0), .clock(clock), .reset(reset));
 	register r1(.in0(wd), .out0(data1), .sel0(we_router1), .clock(clock), .reset(reset));
 	register r2(.in0(wd), .out0(data2), .sel0(we_router2), .clock(clock), .reset(reset));

@@ -49,7 +49,7 @@ module mux_32to1(I0, I1, I2, I3, I4, I5, I6, I7,
             		5'd29:  O = I29;
             		5'd30:  O = I30;
             		5'd31:  O = I31;
-			default: O = I0;
+			default: O = 32'd0;
 		endcase
 	end
 endmodule
