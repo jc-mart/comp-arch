@@ -20,8 +20,6 @@ module register_file_tb();
 		#10
 
 		reset = 1'b0;
-		#10
-
 		write_address = 5'd0;
 		write_enable = 1'b0;
 		write_data = 32'd0;
