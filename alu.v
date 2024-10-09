@@ -1,9 +1,11 @@
 `timescale 1us/100ns
 
+`include "alu.vh"
+
 module alu(in0, in1, selector, zero, out0);
 	// I/O
 	input wire [31:0] in0, in1;
-	input wire [9:0] selector;
+	input wire [2:0] selector;
 	output reg [31:0] out0; // Using case statements
 	output wire zero;
 
@@ -22,33 +24,19 @@ module alu(in0, in1, selector, zero, out0);
 
 	// Routing output
 	always @(*) begin
-		if (selector[2:0] == 3'b000) begin // Add or subtract
-			case (selector[9:3])
-				7'b0000000: out0 = add0;
-				7'b0100000: out0 = sub0;
-				default: out0 = in0;
-			endcase
-		end 
+		case (selector)
+			`ADD: out0 = add0;
+			`SUB: out0 = sub0;
+			`AND: out0 = and0;
+			`OR:  out0 = or0;
+			`XOR: out0 = xor0;
+			`SLL: out0 = sll0;
+			`SLR: out0 = slr0;
+			`SAR: out0 = sar0;
+			default: out0 = in0;
 
-		else if (selector[2:0] == 3'b101) begin // SLR or SAR 
-			case (selector[3:0])
-				7'b0000000: out0 = slr0;
-				7'b0100000: out0 = sar0;
-				default: out0 = in0;
+		endcase
 
-			endcase
-		end
-
-		else begin // Bitwise operations
-			case (selector[2:0])
-				3'b001: out0 = sll0;
-				3'b100: out0 = xor0;
-				3'b110: out0 = or0;
-				3'b111: out0 = and0;
-				default: out0 = in0;
-
-			endcase
-		end
 	end
 	
 	// Zero flag using NOR gate
