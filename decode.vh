@@ -1,0 +1,9 @@
+`define arithmetic_base 32'xxxxxxxxxxxxxxxxxxxxxxxxx0110011
+`define arithmetic_imm  32'xxxxxxxxxxxxxxxxxxxxxxxxx0010011
+`define load            32'xxxxxxxxxxxxxxxxxxxxxxxxx0000011
+`define store           32'xxxxxxxxxxxxxxxxxxxxxxxxx0100011
+`define branch          32'xxxxxxxxxxxxxxxxxxxxxxxxx1100011
+`define jump            32'xxxxxxxxxxxxxxxxxxxxxxxxx1100111
+`define jalr            32'xxxxxxxxxxxxxxxxxxxxxxxxx1100111
+`define auipc           32'xxxxxxxxxxxxxxxxxxxxxxxxx0010111
+`define lui             32'xxxxxxxxxxxxxxxxxxxxxxxxx0110111
