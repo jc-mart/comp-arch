@@ -1,0 +1,10 @@
+`define ADDITION     10'b0
+`define SUBTRACTION  10'b100000000
+`define SHIFT_LL     10'b1
+`define SET_LT       10'b10
+`define SET_LTU	     10'b11
+`define FUNC_XOR     10'b100
+`define SHIFT_RL     10'b101
+`define SHIFT_RA     10'b100000101
+`define FUNC_OR      10'b110
+`define FUNC_AND     10'b111
