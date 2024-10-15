@@ -16,27 +16,27 @@ module alu_tb();
 		// Expecting add 5 + 5 = 10
 		input0 = 32'd5;
 		input1 = 32'd5;
-		function0 = `ADD; // func7 and func3 combined
+		function0 = `add; // func7 and func3 combined
 		
 		#5;
 
 		// Expecting 0 as input0 != input1
 		input0 = 32'b110;
 		input1 = 32'b010;
-		function0 = `AND;
+		function0 = `and;
 
 		#5;
 
 		// Expecting 1010 from SLL by 1
 		input0 = 32'b101;
 		input1 = 32'd1;
-		function0 = `SLL;
+		function0 = `sll;
 
 		#5; 
 
 		input0 = 32'b1;
 		input1 = 32'b1;
-		function0 = `XOR;
+		function0 = `xor;
 
 		#5;
 		// TODO: Add more test cases

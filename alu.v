@@ -25,14 +25,14 @@ module alu(in0, in1, selector, zero, out0);
 	// Routing output
 	always @(*) begin
 		case (selector)
-			`ADD: out0 = add0;
-			`SUB: out0 = sub0;
-			`AND: out0 = and0;
-			`OR:  out0 = or0;
-			`XOR: out0 = xor0;
-			`SLL: out0 = sll0;
-			`SLR: out0 = slr0;
-			`SAR: out0 = sar0;
+			`add: out0 = add0;
+			`sub: out0 = sub0;
+			`and: out0 = and0;
+			`or:  out0 = or0;
+			`xor: out0 = xor0;
+			`sll: out0 = sll0;
+			`slr: out0 = slr0;
+			`sar: out0 = sar0;
 			default: out0 = in0;
 
 		endcase

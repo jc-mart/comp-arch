@@ -2,7 +2,7 @@
 
 `include "alu.vh"
 `include "opcode.vh"
-`include "functions.vh"
+`include "instructions.vh"
 
 module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 	      imm_b, branch_sel, mr_sel, mtr_sel, alu_op, 
@@ -38,9 +38,28 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			// Set all possible muxes and alu ops
 			`arithmetic_base: alu_src = 1'b0; // Base arithmetic ops won't use immediates
 			`arithmetic_imm: alu_src = 1'b1;
+			`load: begin
+				branch_sel = 1'b0;
+				mr_sel     = 1'b1;
+				mtr_sel    = 1'b1;
+				alu_op     = `add;
+				mw_sel     = 1'b0;
+				alu_src    = 1'b1;
+				rw_sel     = 1'b1;
+				
+			end
+			`store: begin
+				branch_sel = 1'b0;
+				mr_sel     = 1'b0;
+				mtr_sel    = 1'b0;
+				alu_op     = `add;
+				mw_sel     = 1'b1;
+				alu_src    = 1'b1;
+				rw_sel     = 1'b0;
+			end
 			default: begin
 				alu_src    = 1'b0;
-				alu_op     = `ADD;
+				alu_op     = `add;
 				branch_sel = 1'b0;
 				mr_sel     = 1'b0;
 				mtr_sel    = 1'b0;
@@ -59,20 +78,20 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			ext_imm    = {{20{imm_i[31]}}, imm_i};
 
 			case(funct)
-				`ADDITION:    alu_op = `ADD;
-				`SUBTRACTION: alu_op = `SUB;
-				`SHIFT_LL:    alu_op = `SLL;
-				// `SET_LT:      assign alu_op = <PLACEHOLDER>;
-				// `SET_LTU:     assign alu_op = <PLACEHOLDER>;
-				`FUNC_XOR:    alu_op = `XOR;
-				`SHIFT_RL:    alu_op = `SLR;
-				`SHIFT_RA:    alu_op = `SAR;
-				`FUNC_OR:     alu_op = `OR;
-				`FUNC_AND:    alu_op = `AND;
-				default:      alu_op = `ADD;
+				`ADD:    alu_op = `add;
+				`SUB:    alu_op = `sub;
+				`SLL:    alu_op = `sll;
+				// `SLT:      assign alu_op = <PLACEHOLDER>;
+				// `SLTU:     assign alu_op = <PLACEHOLDER>;
+				`XOR:    alu_op = `xor;
+				`SRL:    alu_op = `slr;
+				`SRA:    alu_op = `sar;
+				`OR:     alu_op = `or;
+				`AND:    alu_op = `and;
+				default: alu_op = `add;
 			endcase
 
-			if (~(funct == `ADDITION) || ~(funct == `SUBTRACTION)) begin
+			if (~(funct == `ADD) || ~(funct == `SUB)) begin
 				ext_imm = {20'b0, imm_i}; // Logical ops don't need sign extension
 			end
 		end 
