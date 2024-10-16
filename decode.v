@@ -18,6 +18,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 	output reg [1:0] alu_src, branch_sel;
 	output reg mr_sel, mtr_sel, mw_sel, rw_sel;
 	output wire [31:0] sign_ext_imm, zero_ext_imm;
+	wire [11:0] sel_imm;
 	reg [6:0] opcode;
 	reg [9:0] funct;
 
@@ -30,8 +31,12 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 	assign imm_b = {in[11:8], in[30:25], in[7], in[31]};
 	assign imm_s = {in[11:7], in[31:25]};
 	assign imm_j = {in[31], in[21:12], in[22], in[30:23]};
-	assign sign_ext_imm = {{20{in[31]}}, imm_i};
-	assign zero_ext_imm = {20'b0, imm_i};
+	assign sel_imm = (in[6:0] == `load) ? imm_i:
+			 (in[6:0] == `store) ? imm_s:
+			 (in[6:0] == `branch) ? imm_b:
+			 imm_i;
+	assign sign_ext_imm = {{20{in[31]}}, sel_imm};
+	assign zero_ext_imm = {20'b0, sel_imm};
 
 	// Mux selects and ALU operation will get chosen here.
 	always @(*) begin
