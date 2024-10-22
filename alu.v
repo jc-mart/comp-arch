@@ -2,19 +2,19 @@
 
 `include "alu.vh"
 
-module alu(in0, in1, selector, zero, out0);
+module alu(in0, in1, selector, zero, msb, carry, out0);
 	// I/O
 	input wire [31:0] in0, in1;
 	input wire [2:0] selector;
 	output reg [31:0] out0; // Using case statements
-	output wire zero;
+	output wire zero, msb, carry;
 
 	// Intermediates
 	wire [31:0] add0, sub0, and0, or0, xor0, sll0, slr0, sar0;
 
 	// Logic
 	assign add0 = in0 + in1;
-	assign sub0 = in0 - in1;
+	assign {carry, sub0} = in0 - in1; // Carry will be 1 if in0 is smaller
 	assign and0 = in0 & in1;
 	assign or0 = in0 | in1;
 	assign xor0 = in0 ^ in1;
@@ -41,4 +41,5 @@ module alu(in0, in1, selector, zero, out0);
 	
 	// Zero flag using NOR gate
 	assign zero = ~(|out0);
+	assign msb = out0[31];
 endmodule

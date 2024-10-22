@@ -49,7 +49,7 @@ module register_file(ra0, ra1, we, wd, wa, out0, out1, clock, reset);
 			       .out23(we_router23), .out24(we_router24), .out25(we_router25), 
 			       .out26(we_router26), .out27(we_router27), .out28(we_router28), 
 			       .out29(we_router29), .out30(we_router30), .out31(we_router31));
-	register r0(.in0(wd), .out0(data0), .sel0(we_router0), .clock(clock), .reset(reset));
+	register r0(.in0(32'd0), .out0(data0), .sel0(1'b0), .clock(clock), .reset(reset));
 	register r1(.in0(wd), .out0(data1), .sel0(we_router1), .clock(clock), .reset(reset));
 	register r2(.in0(wd), .out0(data2), .sel0(we_router2), .clock(clock), .reset(reset));
 	register r3(.in0(wd), .out0(data3), .sel0(we_router3), .clock(clock), .reset(reset));

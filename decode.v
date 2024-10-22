@@ -5,7 +5,7 @@
 `include "instructions.vh"
 
 module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
-	      imm_b, branch_sel, mr_sel, mtr_sel, alu_op, 
+	      imm_b, branch_sel, brcmp_src, mr_sel, mtr_sel, alu_op, 
               alu_src, rw_sel, mw_sel, sign_ext_imm,
 	      zero_ext_imm);
 	// I/O
@@ -14,7 +14,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 	output wire [11:0] imm_i, imm_b, imm_s, imm_j;
 	output wire [4:0] rd, rs1, rs2;
 	// Using reg for case statements
-	output reg [2:0] alu_op;
+	output reg [2:0] alu_op, brcmp_src;
 	output reg [1:0] alu_src, branch_sel;
 	output reg mr_sel, mtr_sel, mw_sel, rw_sel;
 	output wire [31:0] sign_ext_imm, zero_ext_imm;
@@ -47,6 +47,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			// Set all possible muxes and alu ops
 			`arithmetic: begin
 				branch_sel = 2'b0;
+				brcmp_src  = 3'b111;
 				mr_sel     = 1'b0;
 				mtr_sel    = 1'b0;
 				case(funct)
@@ -68,6 +69,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			end  
 			`load: begin
 				branch_sel = 2'b0;
+				brcmp_src  = 3'b111;
 				mr_sel     = 1'b1;
 				mtr_sel    = 1'b1;
 				alu_op     = `add;
@@ -77,6 +79,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			end
 			`store: begin
 				branch_sel = 2'b0;
+				brcmp_src  = 3'b111;
 				mr_sel     = 1'b0;
 				mtr_sel    = 1'b0;
 				alu_op     = `add;
@@ -86,6 +89,14 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			end
 			`branch: begin
 				branch_sel = 2'b1;
+				case (funct[3:0])
+					`BEQ:  brcmp_src = 3'b000;
+					`BNE:  brcmp_src = 3'b001;
+					`BLT:  brcmp_src = 3'b010;
+					`BGE:  brcmp_src = 3'b011;
+					`BLTU: brcmp_src = 3'b100;
+					`BGEU: brcmp_src = 3'b101;
+				endcase
 				mr_sel     = 1'b0;
 				mtr_sel    = 1'b0;
 				alu_op     = `sub;
@@ -95,6 +106,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			end
 			`jump: begin
 				branch_sel = 2'b10;
+				brcmp_src  = 3'b111;
 				mr_sel     = 1'b0;
 				mtr_sel    = 1'b0;
 				alu_op     = `add;
@@ -105,6 +117,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			end
 			`jalr: begin
 				branch_sel = 2'b11;
+				brcmp_src  = 3'b111;
 				mr_sel     = 1'b0;
 				mtr_sel    = 1'b0;
 				alu_op     = `add;
@@ -113,7 +126,8 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 				rw_sel     = 1'b0;
 			end
 			default: begin
-				branch_sel = 1'b0;
+				branch_sel = 2'b0;
+				brcmp_src  = 3'b111;
 				mr_sel     = 1'b0;
 				alu_op     = `add;
 				mtr_sel    = 1'b0;

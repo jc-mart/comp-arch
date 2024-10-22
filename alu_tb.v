@@ -7,10 +7,12 @@ module alu_tb();
 	reg [31:0] input0, input1;
 	reg [2:0] function0;
 	wire [31:0] out;
+	wire msb_flag;
 	wire zero_flag;
 
 	// ALU testing
-	alu alu0(.in0(input0), .in1(input1), .selector(function0), .zero(zero_flag), .out0(out));
+	alu alu0(.in0(input0), .in1(input1), .selector(function0), .zero(zero_flag),
+		 .msb(msb_flag), .out0(out));
 
 	initial begin
 		// Expecting add 5 + 5 = 10
