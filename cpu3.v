@@ -10,7 +10,8 @@ module cpu3(clk, rst);
 	// Intermediates
 	wire [31:0] sign_ext_imm, zero_ext_imm, rf_do0, rf_do1, 
 		    alu_do, alu_din1, mr_do, out, imem_do,
-		    pc_din, pc_nxt_4, pc_nxt_imm;
+		    pc_do, pc_din, pc_nxt_4, pc_nxt_imm,
+		    jal, pc_4_imm;
 	wire [19:0] imm_u;
 	wire [11:0] imm_i, imm_j, imm_s, imm_b;
 	wire [4:0] ra0, ra1, wa;
@@ -34,8 +35,10 @@ module cpu3(clk, rst);
 		 .msb(msb), .carry(carry), .out0(alu_do));
 	alu pc_4(.in0(pc_do), .in1(32'd4), .selector(`add), .zero(na), .msb(na), 
 		 .carry(na), .out0(pc_nxt_4));
-	alu pc_imm(.in0(pc_do), .in(imm_b), .selector(`add), .zero(na), .msb(na), 
+	alu pc_imm(.in0(pc_do), .in1(imm_b), .selector(`add), .zero(na), .msb(na), 
 		   .carry(na), .out0(pc_nxt_imm));
+	alu jal_imm(.in0(pc_do), .in1({12'b0, imm_j}), .selector(`add), .zero(na),
+		    .msb(na), .carry(na), .out0(jal));
 	memory2c dmem(.data_out(mr_do), .data_in(rf_do1), .addr(alu_do), .enable(1'b1),
 		      .wr(mw_sel), .createdump(1'b0), .clk(clk), .rst(rst));
 	memory2c imem(.data_out(imem_do), .data_in(32'b0), .addr(pc_do), .enable(1'b1),
@@ -43,10 +46,10 @@ module cpu3(clk, rst);
 	register pc(.in0(pc_din), .out0(pc_do), .sel0(1'b1), .clock(clk), .reset(rst));
 	mux_4to1 mux_alu_src(.A(rf_do1), .B(sign_ext_imm), .C(zero_ext_imm),
 			     .D(32'b0), .S0(alu_src), .Z(alu_din1));
-	mux_2to1 pc_src(.A(pc_nxt), .B(32'b0), .C(32'b0), .D(32'b0),
+	mux_4to1 mux_pc_src(.A(pc_4_imm), .B(jal), .C(rf_do0), .D(32'b0),
 			.S0(branch_sel), .Z(pc_din)); // .C will be for jumps
-	mux_2to1 pc_nxt_src(.A(pc_nxt_4), .B(pc_nxt_imm), .S0(branch_sel[0] & brcmp),
-			  .Z(pc_din));
+	mux_2to1 mux_pc_nxt(.A(pc_nxt_4), .B(pc_nxt_imm), .S0(branch_sel[0] & brcmp),
+			  .Z(pc_4_imm));
 	mux_2to1 mux_dmem_src(.A(alu_do), .B(mr_do), .S0(mtr_sel), .Z(out));
 	mux_8to1_1 mux_brcmp_src(.in0(zero), .in1(~zero), .in2(msb), .in3(~msb),
 				 .in4(carry), .in5(~carry), .in6(1'b0), .in7(1'b0),

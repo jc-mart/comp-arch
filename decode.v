@@ -35,8 +35,18 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 			 (in[6:0] == `store) ? imm_s:
 			 (in[6:0] == `branch) ? imm_b:
 			 imm_i;
-	assign sign_ext_imm = {{20{in[31]}}, sel_imm};
-	assign zero_ext_imm = {20'b0, sel_imm};
+	assign sign_ext_imm = ((in[6:0] == `load) | (in[6:0] == `arithmetic)) ? 
+			      {{20{in[31]}}, imm_i}:
+			      (in[6:0] == `store) ? {{20{in[31]}}, imm_s}:
+			      (in[6:0] == `branch) ? {{20{in[31]}}, imm_b}:
+			      ((in[6:0] == `lui) | (in[6:0] == `auipc)) ? 
+			      {imm_u, 12'b0}: {{20{in[31]}}, imm_i};
+	assign zero_ext_imm = ((in[6:0] == `load) | (in[6:0] == `arithmetic)) ?
+			      {20'b0, imm_i}:
+			      (in[6:0] == `store) ? {20'b0, imm_s}:
+			      (in[6:0] == `branch) ? {20'b0, imm_b}:
+			      ((in[6:0] == `lui) | (in[6:0] == `auipc)) ?
+			      {imm_u, 12'b0}: {20'b0, imm_i};
 
 	// Mux selects and ALU operation will get chosen here.
 	always @(*) begin
@@ -123,7 +133,27 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 				alu_op     = `add;
 				mw_sel     = 1'b0;
 				alu_src    = `rf;
-				rw_sel     = 1'b0;
+				rw_sel     = 1'b1;
+			end
+			`lui: begin
+				branch_sel = 2'b0;
+				brcmp_src  = 3'b111;
+				mr_sel     = 1'b0;
+				mtr_sel    = 1'b0;
+				alu_op     = `add;
+				mw_sel     = 1'b0;
+				alu_src    = `ze;
+				rw_sel     = 1'b1;
+			end
+			`auipc: begin
+				branch_sel = 2'b0;
+				brcmp_src  = 3'b111;
+				mr_sel	   = 1'b0;
+				mtr_sel    = 1'b0;
+				alu_op     = `add;
+				mw_sel	   = 1'b0;
+				alu_src    = `ze;
+				rw_sel     = 1'b1;
 			end
 			default: begin
 				branch_sel = 2'b0;
