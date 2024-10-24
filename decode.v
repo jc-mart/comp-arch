@@ -10,8 +10,8 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 	      zero_ext_imm);
 	// I/O
 	input wire [31:0] in;
-	output wire [19:0] imm_u;
-	output wire [11:0] imm_i, imm_b, imm_s, imm_j;
+	output wire [19:0] imm_u, imm_j;
+	output wire [11:0] imm_i, imm_b, imm_s;
 	output wire [4:0] rd, rs1, rs2;
 	// Using reg for case statements
 	output reg [2:0] alu_op, brcmp_src;
@@ -28,7 +28,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 	assign rs2 = in[24:20];
 	assign imm_i = in[31:20];
 	assign imm_u = in[31:12];
-	assign imm_b = {in[11:8], in[30:25], in[7], in[31]};
+	assign imm_b = {in[31], in[7], in[30:25], in[11:8]};
 	assign imm_s = {in[11:7], in[31:25]};
 	assign imm_j = {in[31], in[21:12], in[22], in[30:23]};
 	assign sel_imm = (in[6:0] == `load) ? imm_i:
@@ -38,7 +38,7 @@ module decode(in, rs1, rs2, rd, imm_i, imm_u, imm_j, imm_s,
 	assign sign_ext_imm = ((in[6:0] == `load) | (in[6:0] == `arithmetic)) ? 
 			      {{20{in[31]}}, imm_i}:
 			      (in[6:0] == `store) ? {{20{in[31]}}, imm_s}:
-			      (in[6:0] == `branch) ? {{20{in[31]}}, imm_b}:
+			      (in[6:0] == `branch) ? {{19{in[31]}}, imm_b, 1'b0}:
 			      ((in[6:0] == `lui) | (in[6:0] == `auipc)) ? 
 			      {imm_u, 12'b0}: {{20{in[31]}}, imm_i};
 	assign zero_ext_imm = ((in[6:0] == `load) | (in[6:0] == `arithmetic)) ?
