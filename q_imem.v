@@ -87,7 +87,7 @@ module q_imem (
 `ifdef NO_PLI
 		altsyncram_component.init_file = "E:/coding projects/comp-arch/loadfile_all.rif"
 `else
-		altsyncram_component.init_file = "E:/coding projects/comp-arch/loadfile_all.hex"
+		altsyncram_component.init_file = "E:/coding projects/comp-arch/new_loadfileall.hex"
 `endif
 ,
 		altsyncram_component.intended_device_family = "MAX 10",

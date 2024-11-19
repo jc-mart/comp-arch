@@ -11,7 +11,7 @@ module cpu4(clk, mem_clk, rst);
 	wire [31:0] sign_ext_imm, zero_ext_imm, rf_do0, rf_do1, 
 		    alu_do, alu_din1, mr_do, out, imem_do,
 		    pc_do, pc_din, pc_nxt_4, pc_nxt_imm,
-		    jal, pc_4_imm, jal_alu_in1, latch_pc_do;
+		    jal, pc_4_imm, jal_alu_in1;
 	wire [19:0] imm_u, imm_j;
 	wire [11:0] imm_i, imm_s, imm_b;
 	wire [4:0] ra0, ra1, wa;
@@ -34,13 +34,13 @@ module cpu4(clk, mem_clk, rst);
 			 .out0(rf_do0), .out1(rf_do1), .clock(clk), .reset(rst));
 	alu alu0(.in0(rf_do0), .in1(alu_din1), .selector(alu_func), .zero(zero),
 		 .msb(msb), .carry(carry), .out0(alu_do));
-	alu pc_4(.in0(latch_pc_do), .in1(32'd4), .selector(`add), .zero(na), .msb(na), 
+	alu pc_4(.in0(pc_do), .in1(32'd4), .selector(`add), .zero(na), .msb(na), 
 		 .carry(na), .out0(pc_nxt_4));
-	alu pc_imm(.in0(latch_pc_do), .in1(sign_ext_imm), .selector(`add), .zero(na), .msb(na), 
+	alu pc_imm(.in0(pc_do), .in1(sign_ext_imm), .selector(`add), .zero(na), .msb(na), 
 		   .carry(na), .out0(pc_nxt_imm));
 	alu jal_imm(.in0(pc_do), .in1(jal_alu_in1), .selector(`add), .zero(na),
 		    .msb(na), .carry(na), .out0(jal));
-	// memory2c dmem(.data_out(mr_do), .data_in(rf_do1), .addr(alu_do), .enable(1'b1),
+	//memory2c dmem(.data_out(mr_do), .data_in(rf_do1), .addr(alu_do), .enable(1'b1),
 	// 	      .wr(mw_sel), .createdump(1'b0), .clk(clk), .rst(rst));
 	// memory2c imem(.data_out(imem_do), .data_in(32'b0), .addr(pc_do), .enable(1'b1),
 	//  	      .wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
@@ -48,7 +48,6 @@ module cpu4(clk, mem_clk, rst);
 	q_imem imem(.address(pc_do[11:2]), .clock(mem_clk), .q(imem_do));
 	register pc(.in0(pc_din), .out0(pc_do), .sel0(1'b1), .clock(clk), .reset(rst));
 	// Latches
-	register pc_latch(.in0(pc_do), .out0(latch_pc_do), .sel0(1'b1), .clock(clk), .reset(rst));
 
 	mux_4to1 mux_alu_src(.A(rf_do1), .B(sign_ext_imm), .C(zero_ext_imm),
 			     .D(32'b0), .S0(alu_src), .Z(alu_din1));
