@@ -6,5 +6,7 @@
 !*.qpf
 !*.qsf
 !*.sdc
+!*.hex
+!*.img
 
 comp-arch.*
